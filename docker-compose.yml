@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Serviço da API Spring Boot
+  app:
+    build: .
+    container_name: adotapet-api
+    ports:
+      - "${APP_PORT}:8080" # Usa a porta definida no .env
+    depends_on:
+      - db
+    environment:
+      # Constrói a URL JDBC dinamicamente usando as variáveis do .env
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST}:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - adotapet-network
+
+  # Serviço do Banco de Dados
+  db:
+    image: postgres:15-alpine
+    container_name: adotapet-db
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      # Passa as variáveis do .env para o container do Postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - adotapet-network
+
+networks:
+  adotapet-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
