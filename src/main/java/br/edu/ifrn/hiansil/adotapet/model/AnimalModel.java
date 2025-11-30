@@ -38,4 +38,8 @@ public class AnimalModel {
     @ManyToOne
     @JoinColumn(name = "raca_id", nullable = false)
     private RacaModel raca;
+
+    @ManyToOne
+    @JoinColumn(name = "especie_id", nullable = false)
+    private EspecieModel especie;
 }
