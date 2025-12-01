@@ -15,7 +15,7 @@ public class RacaModel {
     @Column(nullable = false)
     private String nome;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private TipoEspecie especie; // CACHORRO, GATO...
+    @ManyToOne
+    @JoinColumn(name="especie_id", nullable = false)
+    private EspecieModel especie;
 }
