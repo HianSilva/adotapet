@@ -6,5 +6,5 @@ import br.edu.ifrn.hiansil.adotapet.model.EspecieModel;
 
 @Repository
 public interface EspecieRepository extends JpaRepository<EspecieModel, Long> {
-    boolean existisByNome(String nome);
+    boolean existsByNome(String nome);
 }
