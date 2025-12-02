@@ -23,7 +23,6 @@ public class AbrigoController {
     public ResponseEntity<AbrigoResponseDTO> cadastrar(@RequestBody @Valid AbrigoRequestDTO dto, UriComponentsBuilder uriBuilder) {
         AbrigoResponseDTO abrigoCadastrado = abrigoService.cadastrar(dto);
 
-        // Cria a URI para o cabeçalho 'Location' (Boas práticas REST)
         URI uri = uriBuilder.path("/api/v1/abrigos/{id}").buildAndExpand(abrigoCadastrado.getId()).toUri();
 
         return ResponseEntity.created(uri).body(abrigoCadastrado);
