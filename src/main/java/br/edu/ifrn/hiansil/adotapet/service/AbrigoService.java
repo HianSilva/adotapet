@@ -1,10 +1,18 @@
 package br.edu.ifrn.hiansil.adotapet.service;
 
 import br.edu.ifrn.hiansil.adotapet.dto.request.AbrigoRequestDTO;
+import br.edu.ifrn.hiansil.adotapet.dto.request.LoginRequestDTO;
 import br.edu.ifrn.hiansil.adotapet.dto.response.AbrigoResponseDTO;
+import br.edu.ifrn.hiansil.adotapet.dto.response.LoginResponseDTO;
 import br.edu.ifrn.hiansil.adotapet.model.AbrigoModel;
 import br.edu.ifrn.hiansil.adotapet.repository.AbrigoRepository;
+import br.edu.ifrn.hiansil.adotapet.security.JwtTokenService;
+import br.edu.ifrn.hiansil.adotapet.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +24,9 @@ import java.util.stream.Collectors;
 public class AbrigoService {
 
     private final AbrigoRepository abrigoRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenService jwtTokenService;
 
     @Transactional
     public AbrigoResponseDTO cadastrar(AbrigoRequestDTO dto) {
@@ -31,11 +42,30 @@ public class AbrigoService {
         abrigo.setEmail(dto.getEmail());
         abrigo.setDocumento(dto.getDocumento());
         abrigo.setTelefone(dto.getTelefone());
-        abrigo.setSenha(dto.getSenha());
+        abrigo.setSenha(passwordEncoder.encode(dto.getSenha())); // Criptografa a senha
 
         abrigoRepository.save(abrigo);
 
         return new AbrigoResponseDTO(abrigo);
+    }
+
+    public LoginResponseDTO login(LoginRequestDTO dto) {
+        // Autentica o usuário
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = 
+                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha());
+        
+        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        
+        // Gera o token JWT
+        String token = jwtTokenService.generateToken(userDetails);
+        
+        // Busca o abrigo para retornar os dados
+        AbrigoModel abrigo = abrigoRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+        
+        return new LoginResponseDTO(token, abrigo.getId(), abrigo.getNome(), abrigo.getEmail());
     }
 
     public List<AbrigoResponseDTO> listar() {
