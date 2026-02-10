@@ -23,9 +23,6 @@ public class AdotanteModel {
     @Column(nullable = false)
     private String endereco;
 
-    @Column (nullable = false)
-    private String senha;
-
     // "ATIVO" ou "BLOQUEADO"
     @Column(nullable = false)
     private String status = "ATIVO";

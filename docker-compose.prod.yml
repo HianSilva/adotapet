@@ -36,7 +36,17 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: https://${SERVER_IP}/realms/adotapet
+      # Issuer URI: deve ser o valor que o Keycloak emite no token (externo)
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://${SERVER_IP}:8080/realms/adotapet
+      # JWK Set URI: usa endereço interno do Docker para buscar chaves
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:8080/realms/adotapet/protocol/openid-connect/certs
+      # Keycloak Admin Client (usa endereço interno)
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-adotapet}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-adotapet-api}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USERNAME}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     depends_on:
       - db
       - keycloak
