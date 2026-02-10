@@ -1,6 +1,7 @@
 package br.edu.ifrn.hiansil.adotapet.service;
 
 import br.edu.ifrn.hiansil.adotapet.dto.request.SolicitacaoAdocaoRequestDTO;
+import br.edu.ifrn.hiansil.adotapet.dto.response.SolicitacaoAdocaoResponseDTO;
 import br.edu.ifrn.hiansil.adotapet.model.AdotanteModel;
 import br.edu.ifrn.hiansil.adotapet.model.AnimalModel;
 import br.edu.ifrn.hiansil.adotapet.model.SolicitacaoAdocaoModel;
@@ -12,6 +13,9 @@ import br.edu.ifrn.hiansil.adotapet.repository.SolicitacaoAdocaoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +59,6 @@ public class SolicitacaoAdocaoService {
         solicitacaoRepository.save(solicitacao);
     }
 
-    // Método para o Abrigo aprovar ou rejeitar
     @Transactional
     public void atualizarStatus(Long idSolicitacao, String novoStatus) {
         SolicitacaoAdocaoModel solicitacao = solicitacaoRepository.findById(idSolicitacao)
@@ -77,5 +80,29 @@ public class SolicitacaoAdocaoService {
         }
 
         solicitacaoRepository.save(solicitacao);
+    }
+
+    public List<SolicitacaoAdocaoResponseDTO> listar() {
+        return solicitacaoRepository.findAll().stream()
+                .map(SolicitacaoAdocaoResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public SolicitacaoAdocaoResponseDTO obterPorId(Long id) {
+        SolicitacaoAdocaoModel solicitacao = solicitacaoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Solicitação não encontrada."));
+        return new SolicitacaoAdocaoResponseDTO(solicitacao);
+    }
+
+    public List<SolicitacaoAdocaoResponseDTO> listarPorAdotante(Long adotanteId) {
+        return solicitacaoRepository.findByAdotanteId(adotanteId).stream()
+                .map(SolicitacaoAdocaoResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<SolicitacaoAdocaoResponseDTO> listarPorAnimal(Long animalId) {
+        return solicitacaoRepository.findByAnimalId(animalId).stream()
+                .map(SolicitacaoAdocaoResponseDTO::new)
+                .collect(Collectors.toList());
     }
 }

@@ -10,5 +10,9 @@ import java.util.List;
 public interface SolicitacaoAdocaoRepository extends JpaRepository<SolicitacaoAdocaoModel, Long> {
     List<SolicitacaoAdocaoModel> findByAnimalAbrigoId(Long abrigoId);
 
+    List<SolicitacaoAdocaoModel> findByAdotanteId(Long adotanteId);
+
+    List<SolicitacaoAdocaoModel> findByAnimalId(Long animalId);
+
     boolean existsByAdotanteIdAndAnimalIdAndStatus(Long adotanteId, Long animalId, String status);
 }

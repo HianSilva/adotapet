@@ -11,4 +11,5 @@ import java.util.List;
 public interface AnimalRepository extends JpaRepository<AnimalModel, Long> {
     List<AnimalModel> findByStatusAdocao(StatusAdocaoEnum status);
     List<AnimalModel> findByAbrigoId(Long abrigoId);
+    List<AnimalModel> findByRacaId(Long racaId);
 }

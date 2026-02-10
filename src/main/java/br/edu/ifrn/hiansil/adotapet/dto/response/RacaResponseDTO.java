@@ -7,7 +7,7 @@ import lombok.Data;
 public class RacaResponseDTO {
     private Long id;
     private String nome;
-    private String especie; // Ex: "Gato"
+    private String especie;
 
     public RacaResponseDTO(RacaModel raca) {
         this.id = raca.getId();

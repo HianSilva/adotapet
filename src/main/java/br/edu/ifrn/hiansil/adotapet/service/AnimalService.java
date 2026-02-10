@@ -50,4 +50,36 @@ public class AnimalService {
                 .map(AnimalResponseDTO::new)
                 .collect(Collectors.toList());
     }
+
+    public List<AnimalResponseDTO> listarTodos() {
+        return animalRepository.findAll().stream()
+                .map(AnimalResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<AnimalResponseDTO> listarPorAbrigo(Long abrigoId) {
+        return animalRepository.findByAbrigoId(abrigoId).stream()
+                .map(AnimalResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public List<AnimalResponseDTO> listarPorRaca(Long racaId) {
+        return animalRepository.findByRacaId(racaId).stream()
+                .map(AnimalResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    public AnimalResponseDTO obterPorId(Long id) {
+        AnimalModel animal = animalRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Animal não encontrado."));
+        return new AnimalResponseDTO(animal);
+    }
+
+    public void deletarAnimal(Long id) {
+        if (!animalRepository.existsById(id)) {
+            throw new IllegalArgumentException("Animal não encontrado.");
+        }
+        animalRepository.deleteById(id);
+    }
+
 }

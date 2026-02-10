@@ -6,7 +6,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>4.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/> 
     </parent>
     <groupId>br.edu.ifrn.hiansil</groupId>
     <artifactId>adota-pet</artifactId>
@@ -65,10 +65,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-webmvc-test</artifactId>
-            <scope>test</scope>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.0.1</version> 
         </dependency>
+        
     </dependencies>
 
     <build>

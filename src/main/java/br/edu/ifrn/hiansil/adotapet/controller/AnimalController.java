@@ -28,8 +28,29 @@ public class AnimalController {
         return ResponseEntity.created(uri).body(animalSalvo);
     }
 
-    @GetMapping
+    @GetMapping("/disponiveis")
     public ResponseEntity<List<AnimalResponseDTO>> listarDisponiveis() {
         return ResponseEntity.ok(animalService.listarDisponiveis());
+    }
+
+    @GetMapping("/todos")
+    public ResponseEntity<List<AnimalResponseDTO>> listarTodos() {
+        return ResponseEntity.ok(animalService.listarTodos());
+    }   
+
+    @GetMapping("/abrigo/{abrigoId}")
+    public ResponseEntity<List<AnimalResponseDTO>> listarPorAbrigo(@PathVariable Long abrigoId) {
+        return ResponseEntity.ok(animalService.listarPorAbrigo(abrigoId));
+    }
+
+    @GetMapping("/raca/{racaId}")
+    public ResponseEntity<List<AnimalResponseDTO>> listarPorRaca(@PathVariable Long racaId) {
+        return ResponseEntity.ok(animalService.listarPorRaca(racaId));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        animalService.deletarAnimal(id);
+        return ResponseEntity.noContent().build();
     }
 }
