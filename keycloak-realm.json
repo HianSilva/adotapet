@@ -1,0 +1,71 @@
+{
+  "realm": "adotapet",
+  "enabled": true,
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "requiredActions": [
+    {
+      "alias": "VERIFY_PROFILE",
+      "name": "Verify Profile",
+      "providerId": "VERIFY_PROFILE",
+      "enabled": false,
+      "defaultAction": false
+    }
+  ],
+  "roles": {
+    "realm": [
+      {
+        "name": "ABRIGO",
+        "description": "Usuário abrigo - pode gerenciar animais e adoções"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "adotapet-api",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "dev-secret-change-in-prod",
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:8080/*",
+        "http://localhost:3000/*"
+      ],
+      "webOrigins": [
+        "http://localhost:8080",
+        "http://localhost:3000"
+      ],
+      "attributes": {
+        "access.token.lifespan": "3600"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "abrigo-teste",
+      "email": "abrigo@teste.com",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Abrigo",
+      "lastName": "Teste",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "abrigo123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["ABRIGO"]
+    }
+  ]
+}

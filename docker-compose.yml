@@ -1,36 +1,45 @@
 version: '3.8'
 
 services:
-  # Serviço da API Spring Boot
-  app:
-    build: .
-    container_name: adotapet-api
-    ports:
-      - "${APP_PORT}:8080" # Usa a porta definida no .env
-    depends_on:
-      - db
-    environment:
-      # Constrói a URL JDBC dinamicamente usando as variáveis do .env
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST}:5432/${POSTGRES_DB}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    networks:
-      - adotapet-network
-
-  # Serviço do Banco de Dados
+  # Banco de dados PostgreSQL
   db:
     image: postgres:15-alpine
     container_name: adotapet-db
     ports:
-      - "${DB_PORT}:5432"
+      - "5433:5432"
     environment:
-      # Passa as variáveis do .env para o container do Postgres
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      POSTGRES_DB: adotapet
+      POSTGRES_USER: adotapet
+      POSTGRES_PASSWORD: adotapet123
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - adotapet-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U adotapet -d adotapet"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Keycloak - Identity Provider
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1
+    container_name: adotapet-keycloak
+    ports:
+      - "8180:8080"
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/adotapet
+      KC_DB_USERNAME: adotapet
+      KC_DB_PASSWORD: adotapet123
+    command: start-dev --import-realm
+    volumes:
+      - ./keycloak-realm.json:/opt/keycloak/data/import/realm.json:ro
+    depends_on:
+      db:
+        condition: service_healthy
     networks:
       - adotapet-network
 
