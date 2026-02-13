@@ -18,14 +18,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/animais")
 @RequiredArgsConstructor
-@Tag(name = "Animais", description = "Gerenciamento de animais para adoção")
+@Tag(name = "Animais", description = "Gerenciamento de animais para adoção. Endpoints de leitura são públicos, escrita requer role ABRIGO ou ADMIN.")
 public class AnimalController {
 
     private final AnimalService animalService;
 
     @PostMapping
-    @Operation(summary = "Cadastrar novo animal", description = "Endpoint protegido - Requer autenticação JWT")
-    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Cadastrar novo animal", description = "Cadastra um novo animal para adoção. Requer role ABRIGO ou ADMIN.")
+    @SecurityRequirement(name = "bearer-jwt")
     public ResponseEntity<AnimalResponseDTO> cadastrar(@RequestBody @Valid AnimalRequestDTO dto, UriComponentsBuilder uriBuilder) {
         AnimalResponseDTO animalSalvo = animalService.cadastrar(dto);
 
@@ -35,32 +35,48 @@ public class AnimalController {
     }
 
     @GetMapping("/disponiveis")
-    @Operation(summary = "Listar animais disponíveis", description = "Endpoint público para listar animais disponíveis para adoção")
+    @Operation(
+        summary = "Listar animais disponíveis",
+        description = "Endpoint **público** - Lista apenas animais com status disponível para adoção.",
+        security = {}  // Endpoint público - sem segurança
+    )
     public ResponseEntity<List<AnimalResponseDTO>> listarDisponiveis() {
         return ResponseEntity.ok(animalService.listarDisponiveis());
     }
 
     @GetMapping("/todos")
-    @Operation(summary = "Listar todos os animais", description = "Endpoint público para listar todos os animais")
+    @Operation(
+        summary = "Listar todos os animais",
+        description = "Endpoint **público** - Lista todos os animais independente do status.",
+        security = {}  // Endpoint público - sem segurança
+    )
     public ResponseEntity<List<AnimalResponseDTO>> listarTodos() {
         return ResponseEntity.ok(animalService.listarTodos());
     }   
 
     @GetMapping("/abrigo/{abrigoId}")
-    @Operation(summary = "Listar animais por abrigo", description = "Endpoint público para listar animais de um abrigo específico")
+    @Operation(
+        summary = "Listar animais por abrigo",
+        description = "Endpoint **público** - Lista animais de um abrigo específico.",
+        security = {}  // Endpoint público - sem segurança
+    )
     public ResponseEntity<List<AnimalResponseDTO>> listarPorAbrigo(@PathVariable Long abrigoId) {
         return ResponseEntity.ok(animalService.listarPorAbrigo(abrigoId));
     }
 
     @GetMapping("/raca/{racaId}")
-    @Operation(summary = "Listar animais por raça", description = "Endpoint público para listar animais de uma raça específica")
+    @Operation(
+        summary = "Listar animais por raça",
+        description = "Endpoint **público** - Lista animais de uma raça específica.",
+        security = {}  // Endpoint público - sem segurança
+    )
     public ResponseEntity<List<AnimalResponseDTO>> listarPorRaca(@PathVariable Long racaId) {
         return ResponseEntity.ok(animalService.listarPorRaca(racaId));
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Excluir animal", description = "Endpoint protegido - Requer autenticação JWT")
-    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "Excluir animal", description = "Remove um animal do sistema. Requer role ABRIGO ou ADMIN.")
+    @SecurityRequirement(name = "bearer-jwt")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         animalService.deletarAnimal(id);
         return ResponseEntity.noContent().build();
