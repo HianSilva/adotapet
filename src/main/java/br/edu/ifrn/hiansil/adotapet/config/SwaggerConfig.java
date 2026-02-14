@@ -31,19 +31,30 @@ public class SwaggerConfig {
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri:http://localhost:8180/realms/adotapet}")
     private String keycloakIssuerUri;
 
+    @Value("${app.server.url:http://localhost:8080}")
+    private String serverUrl;
+
+    @Value("${app.server.production-url:}")
+    private String productionUrl;
+
     @Bean
     public OpenAPI customOpenAPI() {
         final String bearerSchemeName = "bearer-jwt";
         final String oauth2SchemeName = "oauth2";
+
+        List<Server> servers = new java.util.ArrayList<>();
+        servers.add(new Server().url(serverUrl).description("Servidor Local"));
+        
+        if (productionUrl != null && !productionUrl.isEmpty()) {
+            servers.add(new Server().url(productionUrl).description("Servidor de Produção (AWS)"));
+        }
         
         return new OpenAPI()
                 .info(apiInfo())
                 .externalDocs(new ExternalDocumentation()
                         .description("Keycloak Admin Console")
-                        .url("http://localhost:8180/admin"))
-                .servers(List.of(
-                        new Server().url("http://localhost:8080").description("Servidor de Desenvolvimento")
-                ))
+                        .url(keycloakIssuerUri.replace("/realms/adotapet", "/admin")))
+                .servers(servers)
                 .components(new Components()
                         // Esquema Bearer JWT (para uso direto com token)
                         .addSecuritySchemes(bearerSchemeName, new SecurityScheme()

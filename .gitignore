@@ -31,4 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Environment ###
 .env
+.env.*
+!.env.example
+
+### Certificates ###
+nginx/certs/
+*.pem
+*.key
+*.crt
+
+### Docker ###
+docker-compose.override.yml
