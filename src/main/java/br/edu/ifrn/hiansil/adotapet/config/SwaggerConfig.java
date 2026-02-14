@@ -104,71 +104,7 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("🐾 AdotaPet API")
-                .version("1.0.0")
-                .description("""
-                    ## API para Gerenciamento de Adoção de Animais
-                    
-                    Esta API permite o gerenciamento completo do processo de adoção de animais,
-                    incluindo cadastro de abrigos, animais e solicitações de adoção.
-                    
-                    ### 🔐 Autenticação
-                    
-                    A API utiliza **OAuth2/OpenID Connect** com **Keycloak** como Identity Provider.
-                    
-                    **Endpoints de autenticação (públicos):**
-                    - `POST /api/v1/auth/registrar` - Registrar novo abrigo
-                    - `POST /api/v1/auth/login` - Fazer login e obter token JWT
-                    
-                    **Opções de autenticação:**
-                    1. **Via API**: Use os endpoints `/api/v1/auth/login` para obter token
-                    2. **Bearer Token**: Cole o token no header `Authorization: Bearer <token>`
-                    3. **OAuth2 Flow**: Use o fluxo OAuth2 diretamente pelo Swagger UI
-                    
-                    ### 👥 Role Disponível
-                    
-                    | Role | Descrição | Permissões |
-                    |------|-----------|------------|
-                    | `ABRIGO` | Abrigo de animais | Gerenciar animais e ver solicitações |
-                    
-                    ### 🚀 Quick Start
-                    
-                    1. **Registrar um abrigo:**
-                       ```json
-                       POST /api/v1/auth/registrar
-                       {
-                         "nome": "Meu Abrigo",
-                         "email": "meu@abrigo.com",
-                         "documento": "12345678901234",
-                         "telefone": "84999999999",
-                         "senha": "Senha@123"
-                       }
-                       ```
-                    
-                    2. **Fazer login:**
-                       ```json
-                       POST /api/v1/auth/login
-                       {
-                         "email": "meu@abrigo.com",
-                         "senha": "Senha@123"
-                       }
-                       ```
-                    
-                    3. Copie o `accessToken` da resposta
-                    4. Clique em "Authorize" e cole o token
-                    5. Teste os endpoints protegidos!
-                    
-                    ### 📚 Links Úteis
-                    
-                    - [Keycloak Admin](http://localhost:8180/admin) (admin/admin)
-                    - [Keycloak Account](http://localhost:8180/realms/adotapet/account)
-                    """)
-                .contact(new Contact()
-                        .name("IFRN - Instituto Federal do Rio Grande do Norte")
-                        .email("contato@ifrn.edu.br")
-                        .url("https://portal.ifrn.edu.br"))
-                .license(new License()
-                        .name("Apache 2.0")
-                        .url("https://www.apache.org/licenses/LICENSE-2.0.html"));
+                .title("AdotaPet API")
+                .version("1.0.0");
     }
 }
